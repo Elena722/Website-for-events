@@ -1,0 +1,12 @@
+{% extends 'base.html' %}
+<!---->
+{% block content %}
+
+<p>{{event.title}} are going the following members:</p>
+<ol>
+{% for member in members %}
+<li>{{ member.user }}</li>
+{% endfor %}
+</ol>
+
+{% endblock %}

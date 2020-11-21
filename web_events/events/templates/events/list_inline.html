@@ -26,6 +26,7 @@
             <p class="card-text"><small class="text-muted">Where: {{ event_post.location }}</small></p>
             <p class="card-text"><small class="text-muted">Category: {{ event_post.category }}</small></p>
             {% if user.is_authenticated %}
+            {% if event_post.join.all.count  < event_post.members_number %}
             <form action="{% url 'join_event' %}" method="post">{% csrf_token %}
                 <input type="hidden" name="event_pk" value="{{ event_post.pk }}">
                 {% if user not in event_post.join.all %}
@@ -33,8 +34,17 @@
                 {% else %}
                 <button type="submit" class="btn btn-danger">UnJoin</button>
                 {% endif %}
-                <span>{{ event_post.join.all.count }}/{{ event_post.members_number}}</span>
+                <span><a href="{% url 'members_list' event_post.pk %}">{{ event_post.join.all.count }}</a>/{{ event_post.members_number}}</span>
             </form>
+            {% elif event_post.join.all.count  == event_post.members_number%}
+            <form action="{% url 'join_event' %}" method="post">{% csrf_token %}
+                <input type="hidden" name="event_pk" value="{{ event_post.pk }}">
+                {% if user in event_post.join.all %}
+                <button type="submit" class="btn btn-danger">UnJoin</button>
+                {% endif %}
+                <span><a href="{% url 'members_list' event_post.pk %}">{{ event_post.join.all.count }}</a>/{{ event_post.members_number}}</span>
+            </form>
+            {% endif %}
             {% endif %}
         </div>
     </div>

@@ -20,11 +20,11 @@ def home_page_view(request):
     context = {'events': events}
     return render(request, template_name, context)
 
-
 def get_qs(request, event):
     if event.join.filter(id=request.user.pk).exists():
         return True
     return False
+
 
 @login_required
 def create_event(request):
@@ -65,6 +65,7 @@ def event_post_delete_view(request, pk):
     context = {'object': obj}
     return render(request, template_name, context)
 
+
 def my_event_list(request):
     template_name = 'events/list_view.html'
     events = Events.objects.filter(author=request.user)
@@ -92,9 +93,7 @@ def join_event(request):
             event.join.remove(user)
         else:
             event.join.add(user)
-
     joined, created = JoinModelButton.objects.get_or_create(user=user, event_id=event_id)
-
     if not created:
         if joined.value == 'Join':
             joined.value = 'UnJoin'
@@ -104,3 +103,11 @@ def join_event(request):
     # success_url = reverse_lazy('event_detail', kwargs={'pk': event.id})
     success_url = reverse_lazy('home')
     return HttpResponseRedirect(success_url)
+
+
+def members_list(request, pk):
+    template_name = 'events/members_list.html'
+    event = get_object_or_404(Events, id=pk)
+    members = JoinModelButton.objects.filter(event=pk, value='Join')
+    context = {'members': members, 'event': event}
+    return render(request, template_name, context)
