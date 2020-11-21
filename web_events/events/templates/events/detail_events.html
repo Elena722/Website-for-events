@@ -1,0 +1,43 @@
+{% extends 'base.html' %}
+<!---->
+{% block content %}
+{% if request.user.is_authenticated %}
+{% if request.user.is_staff%}
+<div class="col-12">
+    <input type="submit" onclick="location.href='{% url 'update_event_post' event.id %}'" value="Update"/>
+    <input type="submit" onclick="location.href='{% url 'delete_event_post' event.id %}'" value="Delete"/>
+    {% endif %}
+    {% endif %}
+</div>
+<div class="row">
+    <div class="col-12 col-md-12 mb-3 mx-1">
+        <h4 class="font-italic">Detail: {{ event.title }}</h4>
+        {% if event.cover %}
+        <a href=""><img src="{{ event.cover.url }}" alt="..." width="400px" height="auto"/></a>
+        {% endif %}
+        {% if user.is_authenticated %}
+        <div class="col-12">
+            <form action="{% url 'join_event' %}" method="post">{% csrf_token %}
+                {% if is_joined %}
+                <button type="submit" class="btn btn-danger" value="{{ event.pk }}" name="event_pk">UnJoin</button>
+                {% else %}
+                <button type="submit" class="btn btn-info" value="{{ event.pk }}" name="event_pk">Join</button>
+                {% endif %}
+                <span>{{ total_members }}/{{ event.members_number}}</span>
+            </form>
+        </div>
+        {% endif %}
+        <hr>
+        <!--        <p class="font-italic">Title: {{ event.title }}</p>-->
+        <p class="w-50">Description: {{ event.description }}</p>
+        <p>Type: {{event.event_type}}</p>
+        <p>Location: {{event.location}}</p>
+        <p>When: from {{ event.start_date}} to {{ event.end_date}}</p>
+        <p>Time: from {{event.start_time}} to {{event.end_time}}</p>
+        <p>Category: {{event.category}}</p>
+        <p>Host: {{event.host}}</p>
+        <!--request.user.is_staff-->
+    </div>
+    {% endblock %}
+
+

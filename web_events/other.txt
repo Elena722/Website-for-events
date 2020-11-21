@@ -1,0 +1,43 @@
+def filter_category_page(request, category):
+#     category = category.title()
+#     print(category.__class__)
+#     print('category = ', category)
+#     queryset_get = Category.objects.get(name=category)
+#     print(queryset_get)
+#     try:
+#         queryset_get = Category.objects.get(name=category)
+#         queryset_filter = Events.objects.eventtime().filter(category=queryset_get)
+#     except:
+#         raise Http404
+#     template_name = 'events/filter_category_page.html'
+#     context = {'objects': queryset_filter}
+#     return render(request, template_name, context)
+
+
+# @login_required
+# def create_event(request):
+#     form = CreateEventForm(request.POST or None)
+#     if form.is_valid():
+#         print(form.cleaned_data)
+#         title = form.cleaned_data['title']
+#         event_type = form.cleaned_data['event_type']
+#         start_date = form.cleaned_data['start_date']
+#         end_date = form.cleaned_data['end_date']
+#         start_time = form.cleaned_data['start_time']
+#         end_time = form.cleaned_data['end_time']
+#         description = form.cleaned_data['description']
+#         location = form.cleaned_data['location']
+#         host = form.cleaned_data['host']
+#         category = Category.objects.get(name=form.cleaned_data['category'])
+#         author = request.user
+#         # cover = form.cleaned_data['cover']
+#         obj = Events.objects.create(title=title, event_type=event_type, start_date=start_date,
+#                                     end_date=end_date, start_time=start_time, end_time=end_time,
+#                                     description=description, location=location, host=host,
+#                                     category=category, author=author)
+#         form = CreateEventForm()
+#     else:
+#         print('No')
+#     template_name = 'events/create.html'
+#     context = {'form': form}
+#     return render(request, template_name, context)

@@ -1,0 +1,9 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="row">
+    {% for event in events %}
+    {% include 'events/list_inline.html' with event_post=event truncate=True detail=False%}
+    {% endfor %}
+</div>
+{% endblock %}

@@ -1,0 +1,42 @@
+<!--<li><a href="{% url 'event_detail' event_post.pk %}">{{ event_post.title }}</a></li>-->
+
+<div class="col-12 col-md-4 mb-3 mx-auto">
+    <div class="card bg-light">
+        {% if event_post.cover %}
+        <a href="{% url 'event_detail' event_post.pk %}"><img src="{{ event_post.cover.url }}" class="card-img-top"
+                                                              alt="..."/></a>
+        {% endif %}
+        <div class="card-body">
+            {% if not detail %}
+            <h5 class="card-title"><a href="{% url 'event_detail' event_post.pk %}">{{ event_post.title }}</a></h5>
+            {% endif %}
+            <p class="card-text">
+                {% if truncate %}
+                Description: {{ event_post.description|truncatewords:10 }}
+                {% else %}
+                Description: {{ event_post.description }}
+                {% endif %}
+            </p>
+            <!--            {% if not event_post.start_date %}<p>Coming soon</p>{% endif %}-->
+            <p class="card-text"><small class="text-muted">When: {{ event_post.start_date }} -
+                {{event_post.end_date}}</small></p>
+            <p class="card-text"><small class="text-muted">Time: {{ event_post.start_time }} -
+                {{event_post.end_time}}</small></p>
+            <p class="card-text">{{ event_post.author }}</p>
+            <p class="card-text"><small class="text-muted">Where: {{ event_post.location }}</small></p>
+            <p class="card-text"><small class="text-muted">Category: {{ event_post.category }}</small></p>
+            {% if user.is_authenticated %}
+            <form action="{% url 'join_event' %}" method="post">{% csrf_token %}
+                <input type="hidden" name="event_pk" value="{{ event_post.pk }}">
+                {% if user not in event_post.join.all %}
+                <button type="submit" class="btn btn-info">Join</button>
+                {% else %}
+                <button type="submit" class="btn btn-danger">UnJoin</button>
+                {% endif %}
+                <span>{{ event_post.join.all.count }}/{{ event_post.members_number}}</span>
+            </form>
+            {% endif %}
+        </div>
+    </div>
+
+</div>
