@@ -16,13 +16,14 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 from django.conf import settings
-from searches.views import search_view
+from searches.views import search_view, my_search_view
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include('events.urls')),  # add urls from events/urls
     path('accounts/', include('django.contrib.auth.urls')),
     path('search/', search_view),
+    path('search_my/', my_search_view),
 
 ]
 

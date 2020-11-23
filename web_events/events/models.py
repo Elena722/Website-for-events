@@ -9,13 +9,29 @@ from django.contrib.auth.models import User
 
 Author = settings.AUTH_USER_MODEL
 
+
 class EventPostQuerySet(models.QuerySet):
     def eventtime(self):
         now = timezone.now()
         # Events.objects
-        return self.filter(start_date__gte=now)
+        return self.filter(start_date__gte=now)  # this is a problem for my_events (Past, All)
 
     def search(self, query, category, start_date):
+        lookup = (
+                (Q(title__contains=query) |
+                 Q(description__contains=query) |
+                 Q(location__contains=query) |
+                 Q(author__username=query) |
+                 Q(event_type__contains=query) |
+                 Q(host__contains=query)) &
+                (Q(category=category[0]) |
+                 Q(category=category[1])) &
+                Q(start_date__range=(start_date[0], start_date[1]))
+
+        )
+        return self.filter(lookup)
+
+    def my_search(self, query, category, start_date):
         lookup = (
                 (Q(title__contains=query) |
                  Q(description__contains=query) |
@@ -41,7 +57,12 @@ class EventsPostManager(models.Manager):
     def search(self, query=None, category=None, start_date=None):
         if query is None:
             return self.get_queryset().none()
-        return self.get_queryset().eventtime().search(query, category, start_date)
+        return self.get_queryset().search(query, category, start_date)
+
+    def my_search(self, query=None, category=None, start_date=None):
+        if query is None:
+            return self.get_queryset().none()
+        return self.get_queryset().my_search(query, category, start_date)
 
 
 class Category(models.Model):
@@ -73,7 +94,6 @@ class Events(models.Model):  # events_set -> queryset
     join = models.ManyToManyField(User, related_name='join', blank=True)
     created = models.DateField(auto_now_add=True)
 
-
     objects = EventsPostManager()
 
     def __str__(self):
@@ -86,11 +106,12 @@ class Events(models.Model):  # events_set -> queryset
         ordering = ['start_date', 'start_time', 'end_date', 'end_time']
 
 
-
 LIKE_CHOICES = (
     ('Join', 'Join'),
     ('UnJoin', 'UnJoin'),
 )
+
+
 class JoinModelButton(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     event = models.ForeignKey(Events, on_delete=models.CASCADE)

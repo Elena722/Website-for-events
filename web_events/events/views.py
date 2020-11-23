@@ -8,6 +8,7 @@ from django.http import Http404
 from django.contrib.auth.decorators import login_required
 from django.contrib.admin.views.decorators import staff_member_required
 from django.utils import timezone
+from itertools import chain
 
 
 # from django.contrib.auth import get_user_model
@@ -19,6 +20,7 @@ def home_page_view(request):
     # events = get_list_or_404(Events)[0:3]
     context = {'events': events}
     return render(request, template_name, context)
+
 
 def get_qs(request, event):
     if event.join.filter(id=request.user.pk).exists():
@@ -66,13 +68,6 @@ def event_post_delete_view(request, pk):
     return render(request, template_name, context)
 
 
-def my_event_list(request):
-    template_name = 'events/list_view.html'
-    events = Events.objects.filter(author=request.user)
-    context = {'events': events}
-    return render(request, template_name, context)
-
-
 def detail_event(request, pk):
     template_name = 'events/detail_events.html'
     event = get_object_or_404(Events, id=pk)
@@ -110,4 +105,15 @@ def members_list(request, pk):
     event = get_object_or_404(Events, id=pk)
     members = JoinModelButton.objects.filter(event=pk, value='Join')
     context = {'members': members, 'event': event}
+    return render(request, template_name, context)
+
+
+def my_event_list(request):
+    template_name = 'events/list_view.html'
+    events = Events.objects.eventtime().filter(author=request.user)
+    events2 = JoinModelButton.objects.filter(user=request.user, value='Join')
+    for event in events2:
+        obj = Events.objects.filter(title=event)
+        events = events | obj
+    context = {'events': events}
     return render(request, template_name, context)

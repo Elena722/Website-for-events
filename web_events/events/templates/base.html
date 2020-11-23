@@ -19,7 +19,7 @@
 <ul>
     {% if user.is_authenticated %}
     <li>User: {{ user.get_username }}</li>
-    <li><a href="{% url 'my_list' %}">My created events</a></li>
+    <li><a href="{% url 'my_list' %}">My events</a></li>
     <li><a href="{% url 'logout' %}?next={% url 'home' %}">Logout</a></li>
     {% else %}
     <li><a href="{% url 'login' %}?next={% url 'home' %}">Login</a></li>

@@ -14,37 +14,50 @@
                 <a class="nav-link" href="/create">Add event</a>
             </li>
         </ul>
-        <form class="form-inline my-2 my-lg-0" action="/search/">
+        {% if '/filter/my_events/' in request.path or '/search_my/' in request.path%}
+        <form class="form-inline my-2 my-lg-0" action="/search_my/">
             <input class="form-control mr-sm-2" type="search" name="q" placeholder="Search" aria-label="Search">
+            <label for="exampleFormControlSelect0">Role</label>
+            <select class="form-control" id="exampleFormControlSelect0" name="qqqq">
+                <option value="Organizer">Organizer</option>
+                <option value="All">All</option>
+                <option value="Participant">Participant</option>
+            </select>
             <label for="exampleFormControlSelect1">Category</label>
             <select class="form-control" id="exampleFormControlSelect1" name="qq">
-                <!--                <option selected="selected" disabled>Select date</option>-->
                 <option value="All">All</option>
                 <option value="Film">Film</option>
                 <option value="Party">Party</option>
             </select>
-            <label for="exampleFormControlSelect1">When</label>
+            <label for="exampleFormControlSelect2">When</label>
             <select class="form-control" id="exampleFormControlSelect2" name="qqq">
-                <!--                <option selected="selected" disabled>Select date</option>-->
-                <option value="All time">All time</option>
+                <option value="Future">Future</option>
                 <option value="Today">Today</option>
                 <option value="Upcoming">Upcoming</option>
+                <option value="Past">Past</option>
+                <option value="All">All</option>
             </select>
-
-            <!--            <div class="nav-item dropdown">-->
-            <!--                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown"-->
-            <!--                   aria-haspopup="true" aria-expanded="false">-->
-            <!--                    When-->
-            <!--                </a>-->
-
-            <!--                <div class="dropdown-menu" aria-labelledby="navbarDropdown">-->
-            <!--                    <a class="dropdown-item" href="#" name="ddm">Today</a>-->
-            <!--                    <a class="dropdown-item" href="#" name="ddm">Ongoing and Future</a>-->
-            <!--                    <a class="dropdown-item" href="#" name="ddm">Future</a>-->
-            <!--                    <a class="dropdown-item" href="#" name="ddm">All</a>-->
-            <!--                </div>-->
-            <!--            </div>-->
             <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
         </form>
+        {% else %}
+        <form class="form-inline my-2 my-lg-0" action="/search/">
+            <input class="form-control mr-sm-2" type="search" name="q" placeholder="Search" aria-label="Search">
+            <label for="exampleFormControlSelect3">Category</label>
+            <select class="form-control" id="exampleFormControlSelect3" name="qq">
+                <option value="All">All</option>
+                <option value="Film">Film</option>
+                <option value="Party">Party</option>
+            </select>
+            <label for="exampleFormControlSelect4">When</label>
+            <select class="form-control" id="exampleFormControlSelect4" name="qqq">
+                <option value="Future">Future</option>
+                <option value="Today">Today</option>
+                <option value="Upcoming">Upcoming</option>
+                <option value="Past">Past</option>
+                <option value="All">All</option>
+            </select>
+            <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+        </form>
+        {% endif %}
     </div>
 </nav>
