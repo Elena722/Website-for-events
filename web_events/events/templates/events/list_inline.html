@@ -32,7 +32,7 @@
                 {% if user not in event_post.join.all %}
                 <button type="submit" class="btn btn-info">Join</button>
                 {% else %}
-                <button type="submit" class="btn btn-danger">UnJoin</button>
+                <button type="submit" class="btn btn-success">UnJoin</button>
                 {% endif %}
                 <span><a href="{% url 'members_list' event_post.pk %}">{{ event_post.join.all.count }}</a>/{{ event_post.members_number}}</span>
             </form>

@@ -8,7 +8,7 @@
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
           integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
-
+    <link rel="stylesheet" type="text/css" href="/static/css/style.css">
     <title>{% block head_title %}{% endblock %}</title>
 
 </head>
@@ -19,7 +19,7 @@
 <ul>
     {% if user.is_authenticated %}
     <li>User: {{ user.get_username }}</li>
-    <li><a href="{% url 'my_list' %}">My events</a></li>
+    <li><a href="{% url 'my_list' %}" class="link-active">My events</a></li>
     <li><a href="{% url 'logout' %}?next={% url 'home' %}">Logout</a></li>
     {% else %}
     <li><a href="{% url 'login' %}?next={% url 'home' %}">Login</a></li>

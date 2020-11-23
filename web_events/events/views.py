@@ -39,7 +39,7 @@ def create_event(request):
         obj.save()
         form = EventPostModelForm()
     template_name = 'events/create.html'
-    context = {'form': form}
+    context = {'form': form, 'title': 'Create event'}
     return render(request, template_name, context)
 
 
@@ -53,7 +53,7 @@ def event_post_update_view(request, pk):
         obj.cover = form.cleaned_data.get('cover')
         form.save()
     template_name = 'events/create.html'
-    context = {'form': form, 'title': f'Update {obj.title}'}
+    context = {'form': form, 'title': f'Update -> {obj.title}'}
     return render(request, template_name, context)
 
 
