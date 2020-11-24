@@ -13,14 +13,20 @@
             <li class="nav-item">
                 <a class="nav-link" href="/create">Create event</a>
             </li>
+            {% if user.is_authenticated %}
+            {% else %}
+            <li class="nav-item">
+                <a class="nav-link" href="{% url 'registration' %}">Register</a>
+            </li>
+            {% endif %}
         </ul>
         {% if '/filter/my_events/' in request.path or '/search_my/' in request.path%}
         <form class="form-inline my-2 my-lg-0" action="/search_my/">
             <input class="form-control mr-sm-2" type="search" name="q" placeholder="Search" aria-label="Search">
             <label for="exampleFormControlSelect0">Role</label>
             <select class="form-control" id="exampleFormControlSelect0" name="qqqq">
-                <option value="Organizer">Organizer</option>
                 <option value="All">All</option>
+                <option value="Organizer">Organizer</option>
                 <option value="Participant">Participant</option>
             </select>
             <label for="exampleFormControlSelect1">Category</label>

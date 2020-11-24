@@ -62,3 +62,41 @@ class EventPostModelForm(forms.ModelForm):
             raise forms.ValidationError('This title is already exists')
         return title
 
+
+class UserProfileInfoForm(forms.ModelForm):
+    class Meta:
+        model = UserProfileInfoModel
+        fields = ['profile_pic']
+
+
+class UserForm(forms.ModelForm):
+    password = forms.CharField(widget=forms.PasswordInput())
+
+    class Meta:
+        model = User
+        fields = ['username', 'email', 'password']
+
+    def clean_password(self, *args, **kwargs):
+        password = self.cleaned_data.get('password')
+        if 8 <= len(password) <= 30:
+            return password
+        else:
+            raise forms.ValidationError('The password should contain from 8-30 characters')
+
+    def clean_email(self, *args, **kwargs):
+        email = self.cleaned_data.get('email')
+        qs = User.objects.filter(email=email)
+        if qs.exists():
+            raise forms.ValidationError('The user with this email already registered')
+        return email
+
+    def clean_username(self, *args, **kwargs):
+        username = self.cleaned_data.get('username')
+        if len(username) > 50 or len(username) == 0:
+            raise forms.ValidationError('The username cannot be empty or exceed 50 characters')
+        qs = User.objects.filter(username=username)
+        if qs.exists():
+            raise forms.ValidationError('The user with this username already registered')
+        return username
+
+

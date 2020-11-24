@@ -119,3 +119,14 @@ class JoinModelButton(models.Model):
 
     def __str__(self):
         return str(self.event)
+
+
+class UserProfileInfoModel(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    password = models.CharField(max_length=30, default='qwqwqw12')
+    profile_pic = models.ImageField(upload_to='./images/profile_pics', blank=True)
+
+    def __str__(self):
+        return self.user.username
+
+

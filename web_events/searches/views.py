@@ -41,7 +41,11 @@ def search_view(request):
     context = {'query': query, 'category': _category, 'start_date': _start_date}
     SearchQuery.objects.create(author=author, query=query)
     events = Events.objects.search(query=query, category=category, start_date=start_date)
+    if request.user.is_authenticated:
+        user_profile = UserProfileInfoModel.objects.get(user=request.user)
+        context['user_profile'] = user_profile
     context['events'] = events
+    context['title'] = 'Search'
     return render(request, template_name, context)
 
 def my_search_view(request):
@@ -89,5 +93,8 @@ def my_search_view(request):
         obj = Events.objects.filter(title=event)
         events = events | obj
     events = events.my_search(query=query, category=category, start_date=start_date)
+    user_profile = UserProfileInfoModel.objects.get(user=request.user)
     context['events'] = events
+    context['user_profile'] = user_profile
+    context['title'] = 'My event search'
     return render(request, template_name, context)

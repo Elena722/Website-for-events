@@ -1,13 +1,22 @@
 {% extends 'base.html' %}
 
 {% block content %}
-<h3 class="text-center font-italic">My events</h3>
+<h3 class="text-center font-italic">{{ title }}</h3>
 <div class="row">
     <div class="col-12 col-md-8 mx-auto">
+        {% if '/filter/my_events/' in request.path or '/search_my/' in request.path%}
         {% if query %}
-        <p class="lead font-italic">You searched for -> {{ query }} - Your role: {{ role }} - Category: {{ category }} - When: {{ start_date }}</p>
+        <p class="lead font-italic">You searched for -> {{ query }} - Your role: {{ role }} - Category: {{ category }} -
+            When: {{ start_date }}</p>
         {% else %}
         <p class="lead font-italic">You searched for -> Your role: {{ role }} - Category: {{ category }} - When: {{ start_date }}</p>
+        {% endif %}
+        {% else %}
+        {% if query %}
+        <p class="lead font-italic">You searched for -> {{ query }} - Category: {{ category }} - When: {{ start_date }}</p>
+        {% else %}
+        <p class="lead font-italic">You searched for -> Category: {{ category }} - When: {{ start_date }}</p>
+        {% endif %}
         {% endif %}
     </div>
 </div>

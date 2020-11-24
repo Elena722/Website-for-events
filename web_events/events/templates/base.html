@@ -18,7 +18,8 @@
 {% include 'events/navbar.html' %}
 <ul>
     {% if user.is_authenticated %}
-    <li>User: {{ user.get_username }}</li>
+    <li>User: <img src="{{ user_profile.profile_pic.url }}" class="rounded" width="30px" height="auto"
+                                                              alt="..."/> {{ user.get_username }}</li>
     <li><a href="{% url 'my_list' %}" class="link-active">My events</a></li>
     <li><a href="{% url 'logout' %}?next={% url 'home' %}">Logout</a></li>
     {% else %}
