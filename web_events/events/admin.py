@@ -7,7 +7,7 @@ admin.site.register(Events)
 admin.site.register(Category)
 admin.site.register(JoinModelButton)
 admin.site.register(UserProfileInfoModel)
-
+admin.site.register(Comments)
 
 
 

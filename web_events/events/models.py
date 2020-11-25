@@ -102,6 +102,9 @@ class Events(models.Model):  # events_set -> queryset
     def total_members(self):
         return self.join.count()
 
+    def approved_comments(self):
+        return self.comments.filter(approved_comment=True)
+
     class Meta:
         ordering = ['start_date', 'start_time', 'end_date', 'end_time']
 
@@ -129,6 +132,22 @@ class UserProfileInfoModel(models.Model):
     def __str__(self):
         return self.user.username
 
+class Comments(models.Model):
+    event = models.ForeignKey(Events, related_name='comments', on_delete=models.CASCADE)
+    author = models.ForeignKey(Author, on_delete=models.DO_NOTHING)
+    text = models.TextField(max_length=200)
+    created_date = models.DateTimeField(default=timezone.now)
+    approved_comment = models.BooleanField(default=False)
+
+    def approve(self):
+        self.approved_comment = True
+        self.save()
+
+    def __str__(self):
+        return self.text
+
+    class Meta:
+        ordering = ['-created_date']
 
 
 

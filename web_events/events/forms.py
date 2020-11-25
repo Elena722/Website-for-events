@@ -69,8 +69,10 @@ class UserProfileInfoForm(forms.ModelForm):
         model = UserProfileInfoModel
         fields = ['profile_pic']
 
+
 class UserForm(forms.ModelForm):
-    password = forms.CharField(widget=forms.PasswordInput(), help_text=mark_safe("Required. 8-30 characters."), label='Password')
+    password = forms.CharField(widget=forms.PasswordInput(), help_text=mark_safe("Required. 8-30 characters."),
+                               label='Password')
     username = forms.CharField(
         help_text=mark_safe("Required. 50 characters or fewer. Letters, digits and @/./+/-/_ only."), label='Username')
 
@@ -100,3 +102,13 @@ class UserForm(forms.ModelForm):
         if qs.exists():
             raise forms.ValidationError('The user with this username already registered')
         return username
+
+
+class CommentsForm(forms.ModelForm):
+    class Meta:
+        model = Comments
+        fields = ['text']
+
+    widgets = {
+        'text': forms.TextInput(attrs={'class': 'editable medium-editor-textarea'})
+    }

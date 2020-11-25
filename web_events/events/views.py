@@ -1,9 +1,9 @@
 from django.shortcuts import render, get_object_or_404, redirect, HttpResponseRedirect, get_list_or_404
 from django.views.generic import TemplateView, ListView, CreateView, FormView, DetailView
-from .models import Events, Category, JoinModelButton, UserProfileInfoModel
+from .models import Events, Category, JoinModelButton, UserProfileInfoModel, Comments
 from django.urls import reverse_lazy, reverse
 from django import forms
-from .forms import CreateEventForm, EventPostModelForm, UserProfileInfoForm, UserForm
+from .forms import CreateEventForm, EventPostModelForm, UserProfileInfoForm, UserForm, CommentsForm
 from django.http import Http404
 from django.contrib.auth.decorators import login_required
 from django.contrib.admin.views.decorators import staff_member_required
@@ -50,7 +50,7 @@ def create_event(request):
     return render(request, template_name, context)
 
 
-@staff_member_required
+@login_required
 def event_post_update_view(request, pk):
     obj = get_object_or_404(Events, id=pk)
     form = EventPostModelForm(request.POST or None, request.FILES or None,
@@ -65,7 +65,7 @@ def event_post_update_view(request, pk):
     return render(request, template_name, context)
 
 
-@staff_member_required()
+@login_required
 def event_post_delete_view(request, pk):
     obj = get_object_or_404(Events, id=pk)
     template_name = 'events/delete.html'
@@ -92,6 +92,7 @@ def detail_event(request, pk):
     return render(request, template_name, context)
 
 
+@login_required
 def join_event(request):
     user = request.user
     if request.method == 'POST':
@@ -125,6 +126,7 @@ def members_list(request, pk):
     return render(request, template_name, context)
 
 
+@login_required
 def my_event_list(request):
     template_name = 'events/list_view.html'
     events = Events.objects.eventtime().filter(author=request.user)
@@ -165,3 +167,57 @@ def register(request):
         profile_form = UserProfileInfoForm()
     return render(request, template_name,
                   {'user_form': user_form, 'profile_form': profile_form, 'registered': registered})
+
+
+@login_required
+def add_comment(request, pk):
+    template_name = 'events/comments.html'
+    event = get_object_or_404(Events, id=pk)
+    if request.method == 'POST':
+        form = CommentsForm(request.POST)
+        if form.is_valid():
+            comment = form.save(commit=False)
+            comment.event = event
+            comment.author = request.user
+            comment.save()
+            return redirect('event_detail', pk=event.id)
+    else:
+        form = CommentsForm()
+    user_profile = UserProfileInfoModel.objects.get(user=request.user)
+    context = {'form': form, 'title': 'New comment', 'name_button': 'Add comment', 'user_profile': user_profile}
+    return render(request, template_name, context)
+
+
+@login_required
+def event_approve_comment(request, pk):
+    comment = get_object_or_404(Comments, id=pk)
+    event_pk = comment.event.pk
+    comment.approve()
+    success_url = reverse_lazy('event_detail', kwargs={'pk': event_pk})
+    return HttpResponseRedirect(success_url)
+
+
+@login_required
+def event_delete_comment(request, pk):
+    comment = get_object_or_404(Comments, id=pk)
+    print('ok')
+    event_pk = comment.event.pk
+    comment.delete()
+    success_url = reverse_lazy('event_detail', kwargs={'pk': event_pk})
+    return HttpResponseRedirect(success_url)
+
+
+@login_required
+def event_comment_update(request, pk):
+    comment = get_object_or_404(Comments, id=pk)
+    event_pk = comment.event.pk
+    # print(event_pk)
+    form = CommentsForm(request.POST or None, instance=comment)
+    if form.is_valid():
+        comment = form.save(commit=False)
+        comment.cover = form.cleaned_data.get('cover')
+        form.save()
+    template_name = 'events/comments.html'
+    user_profile = UserProfileInfoModel.objects.get(user=request.user)
+    context = {'form': form, 'title': 'Update comment', 'name_button': 'Update comment', 'event_pk': event_pk, 'user_profile': user_profile}
+    return render(request, template_name, context)
