@@ -130,3 +130,5 @@ class UserProfileInfoModel(models.Model):
         return self.user.username
 
 
+
+

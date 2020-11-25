@@ -10,6 +10,7 @@ from django.contrib.admin.views.decorators import staff_member_required
 from django.utils import timezone
 from itertools import chain
 from django.contrib.auth.models import User
+from django.contrib.auth import login, authenticate
 
 
 # from django.contrib.auth import get_user_model
@@ -152,11 +153,15 @@ def register(request):
                 profile.profile_pic = request.FILES['profile_pic']
             profile.save()
             registered = True
+            password = user_form.cleaned_data.get('password')
+            user = authenticate(username=user.username, password=password)
+            login(request, user)
+            return redirect('/')
+
         else:
             print(user_form.errors, profile_form.errors)
     else:
         user_form = UserForm()
         profile_form = UserProfileInfoForm()
-    print(registered)
     return render(request, template_name,
                   {'user_form': user_form, 'profile_form': profile_form, 'registered': registered})

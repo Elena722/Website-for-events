@@ -3,6 +3,7 @@ from django.contrib.auth.models import User
 from django.contrib.auth.forms import UserCreationForm
 import datetime
 from .models import *
+from django.utils.safestring import mark_safe
 
 
 class CreateEventForm(forms.Form):
@@ -68,9 +69,10 @@ class UserProfileInfoForm(forms.ModelForm):
         model = UserProfileInfoModel
         fields = ['profile_pic']
 
-
 class UserForm(forms.ModelForm):
-    password = forms.CharField(widget=forms.PasswordInput())
+    password = forms.CharField(widget=forms.PasswordInput(), help_text=mark_safe("Required. 8-30 characters."), label='Password')
+    username = forms.CharField(
+        help_text=mark_safe("Required. 50 characters or fewer. Letters, digits and @/./+/-/_ only."), label='Username')
 
     class Meta:
         model = User
@@ -98,5 +100,3 @@ class UserForm(forms.ModelForm):
         if qs.exists():
             raise forms.ValidationError('The user with this username already registered')
         return username
-
-
