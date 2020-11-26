@@ -12,12 +12,11 @@
             {% endif %}
             <p class="card-text">
                 {% if truncate %}
-                Description: {{ event_post.description|truncatewords:10 }}
+                <span class="font-weight-bold">Description:</span> {{ event_post.description|truncatechars:50 }}
                 {% else %}
                 Description: {{ event_post.description }}
                 {% endif %}
             </p>
-            <!--            {% if not event_post.start_date %}<p>Coming soon</p>{% endif %}-->
             <p class="card-text"><small class="text-muted">When: {{ event_post.start_date }} -
                 {{event_post.end_date}}</small></p>
             <p class="card-text"><small class="text-muted">Time: {{ event_post.start_time }} -

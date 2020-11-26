@@ -16,7 +16,7 @@ class EventPostQuerySet(models.QuerySet):
         # Events.objects
         return self.filter(start_date__gte=now)  # this is a problem for my_events (Past, All)
 
-    def search(self, query, category, start_date):
+    def search(self, query, category, start_event, end_event, time_range):
         lookup = (
                 (Q(title__contains=query) |
                  Q(description__contains=query) |
@@ -26,12 +26,13 @@ class EventPostQuerySet(models.QuerySet):
                  Q(host__contains=query)) &
                 (Q(category=category[0]) |
                  Q(category=category[1])) &
-                Q(start_date__range=(start_date[0], start_date[1]))
-
+                (Q(start_date__range=(time_range[0], time_range[1])) |
+                 (Q(start_date__lte=start_event) &
+                  Q(end_date__gte=end_event)))
         )
         return self.filter(lookup)
 
-    def my_search(self, query, category, start_date):
+    def my_search(self, query, category, start_event, end_event, time_range):
         lookup = (
                 (Q(title__contains=query) |
                  Q(description__contains=query) |
@@ -41,7 +42,9 @@ class EventPostQuerySet(models.QuerySet):
                  Q(host__contains=query)) &
                 (Q(category=category[0]) |
                  Q(category=category[1])) &
-                Q(start_date__range=(start_date[0], start_date[1]))
+                (Q(start_date__range=(time_range[0], time_range[1])) |
+                 (Q(start_date__lte=start_event) &
+                  Q(end_date__gte=end_event)))
 
         )
         return self.filter(lookup)
@@ -54,15 +57,15 @@ class EventsPostManager(models.Manager):
     def eventtime(self):
         return self.get_queryset().eventtime()
 
-    def search(self, query=None, category=None, start_date=None):
+    def search(self, query=None, category=None, start_event=None, end_event=None, time_range=None):
         if query is None:
             return self.get_queryset().none()
-        return self.get_queryset().search(query, category, start_date)
+        return self.get_queryset().search(query, category, start_event, end_event, time_range)
 
-    def my_search(self, query=None, category=None, start_date=None):
+    def my_search(self, query=None, category=None, start_event=None, end_event=None, time_range=None):
         if query is None:
             return self.get_queryset().none()
-        return self.get_queryset().my_search(query, category, start_date)
+        return self.get_queryset().my_search(query, category, start_event, end_event, time_range)
 
 
 class Category(models.Model):
@@ -109,6 +112,7 @@ class Events(models.Model):  # events_set -> queryset
         ordering = ['start_date', 'start_time', 'end_date', 'end_time']
 
 
+
 LIKE_CHOICES = (
     ('Join', 'Join'),
     ('UnJoin', 'UnJoin'),
@@ -132,10 +136,11 @@ class UserProfileInfoModel(models.Model):
     def __str__(self):
         return self.user.username
 
+
 class Comments(models.Model):
     event = models.ForeignKey(Events, related_name='comments', on_delete=models.CASCADE)
     author = models.ForeignKey(Author, on_delete=models.DO_NOTHING)
-    text = models.TextField(max_length=200)
+    text = models.TextField(max_length=500)
     created_date = models.DateTimeField(default=timezone.now)
     approved_comment = models.BooleanField(default=False)
 
@@ -148,6 +153,3 @@ class Comments(models.Model):
 
     class Meta:
         ordering = ['-created_date']
-
-
-

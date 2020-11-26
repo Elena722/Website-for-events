@@ -11,6 +11,7 @@ from django.utils import timezone
 from itertools import chain
 from django.contrib.auth.models import User
 from django.contrib.auth import login, authenticate
+from django.utils import timezone, dateformat
 
 
 # from django.contrib.auth import get_user_model
@@ -38,9 +39,20 @@ def get_qs(request, event):
 def create_event(request):
     form = EventPostModelForm(request.POST or None, request.FILES or None)
     if form.is_valid():
-        print(form.cleaned_data)
         obj = form.save(commit=False)
         obj.category = form.cleaned_data.get('category')
+
+        ##???
+        start_date = form.cleaned_data.get('start_date')
+        end_date = form.cleaned_data.get('end_date')
+        now = dateformat.format(timezone.now(), 'Y-m-d')
+        start_date = dateformat.format(start_date, 'Y-m-d')
+        end_date = dateformat.format(end_date, 'Y-m-d')
+        if start_date > end_date:
+            raise forms.ValidationError('Start date cannot be later than end date')
+        if start_date < now:
+            raise forms.ValidationError('Start date should be upcoming date')
+        ##??
         obj.author = request.user
         obj.save()
         form = EventPostModelForm()
@@ -129,7 +141,7 @@ def members_list(request, pk):
 @login_required
 def my_event_list(request):
     template_name = 'events/list_view.html'
-    events = Events.objects.eventtime().filter(author=request.user)
+    events = Events.objects.filter(author=request.user)
     events2 = JoinModelButton.objects.filter(user=request.user, value='Join')
     for event in events2:
         obj = Events.objects.filter(title=event)

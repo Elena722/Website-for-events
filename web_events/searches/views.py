@@ -20,15 +20,25 @@ def search_view(request):
     delta_negative_year = dateformat.format(timezone.now() - timezone.timedelta(weeks=52), 'Y-m-d')
     past_now = dateformat.format(timezone.now() - timezone.timedelta(days=1), 'Y-m-d')
     if _start_date == 'Today':
-        start_date = [now, now]
+        start_event = now
+        end_event = now
+        time_range = [now, now]
     elif _start_date == 'Upcoming':
-        start_date = [now, delta_three_month]
+        start_event = now
+        end_event = now
+        time_range = [now, delta_three_month]
     elif _start_date == 'Future':
-        start_date = [now, delta_year]
+        start_event = now
+        end_event = now
+        time_range = [now, delta_year]
     elif _start_date == 'Past':
-        start_date = [delta_negative_year, past_now]
+        start_event = now
+        end_event = now
+        time_range = [delta_negative_year, past_now]
     elif _start_date == 'All':
-        start_date = [delta_negative_year, delta_year]
+        start_event = now
+        end_event = now
+        time_range = [delta_negative_year, delta_year]
     if _category == 'Party':
         category = [1, None]
     elif _category == 'Film':
@@ -40,7 +50,7 @@ def search_view(request):
         author = request.user
     context = {'query': query, 'category': _category, 'start_date': _start_date}
     SearchQuery.objects.create(author=author, query=query)
-    events = Events.objects.search(query=query, category=category, start_date=start_date)
+    events = Events.objects.search(query=query, category=category, start_event=start_event, end_event=end_event, time_range=time_range)
     if request.user.is_authenticated:
         user_profile = UserProfileInfoModel.objects.get(user=request.user)
         context['user_profile'] = user_profile
@@ -62,15 +72,25 @@ def my_search_view(request):
     events2 = []
     events = []
     if _start_date == 'Today':
-        start_date = [now, now]
+        start_event = now
+        end_event = now
+        time_range = [now, now]
     elif _start_date == 'Upcoming':
-        start_date = [now, delta_three_month]
+        start_event = now
+        end_event = now
+        time_range = [now, delta_three_month]
     elif _start_date == 'Future':
-        start_date = [now, delta_year]
+        start_event = now
+        end_event = now
+        time_range = [now, delta_year]
     elif _start_date == 'Past':
-        start_date = [delta_negative_year, past_now]
+        start_event = now
+        end_event = now
+        time_range = [delta_negative_year, past_now]
     elif _start_date == 'All':
-        start_date = [delta_negative_year, delta_year]
+        start_event = now
+        end_event = now
+        time_range = [delta_negative_year, delta_year]
     if _category == 'Party':
         category = [1, None]
     elif _category == 'Film':
@@ -92,7 +112,7 @@ def my_search_view(request):
     for event in events2:
         obj = Events.objects.filter(title=event)
         events = events | obj
-    events = events.my_search(query=query, category=category, start_date=start_date)
+    events = events.my_search(query=query, category=category, start_event=start_event, end_event=end_event, time_range=time_range)
     user_profile = UserProfileInfoModel.objects.get(user=request.user)
     context['events'] = events
     context['user_profile'] = user_profile

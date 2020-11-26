@@ -4,6 +4,7 @@ from django.contrib.auth.forms import UserCreationForm
 import datetime
 from .models import *
 from django.utils.safestring import mark_safe
+from django.utils import timezone, dateformat
 
 
 class CreateEventForm(forms.Form):
@@ -31,28 +32,14 @@ class CreateEventForm(forms.Form):
             raise forms.ValidationError('Please do not use .edu')
         return email
 
-    # def clean(self):
-    #     super(CreateEventForm, self).clean()
-    #     discount = self.cleaned_data.get('discount')
-    #     id = self.cleaned_data.get('id')
-    #     if type(discount) != int:
-    #         self._errors['discount'] = self.error_class(['Discount must be a integer'])
-    #     discountFloat = discount/100
-    #     print(discountFloat)
-    #     prod = Product.objects.get(id=id)
-    #     prod.price = prod.price - (prod.price*discountFloat)
-    #     # don't forget to save the object after modifying
-    #     prod.save()
-    #     print(discount, id)
-    #     return discount
-
 
 class EventPostModelForm(forms.ModelForm):
     class Meta:
         model = Events
         fields = ['title', 'event_type', 'start_date', 'end_date', 'start_time', 'end_time', 'description',
-                  'location', 'host', 'category', 'cover', 'members_number']  # cover
+                  'location', 'host', 'category', 'cover', 'members_number']
 
+# unique title, easier to filter join
     def clean_title(self, *args, **kwargs):
         instance = self.instance
         title = self.cleaned_data.get('title')
@@ -62,6 +49,27 @@ class EventPostModelForm(forms.ModelForm):
         if qs.exists():
             raise forms.ValidationError('This title is already exists')
         return title
+
+# minimum 20 characters
+    def clean_description(self, *args, **kwargs):
+        description = self.cleaned_data.get('description')
+        if len(description) < 20:
+            raise forms.ValidationError('The minimum length of the description should be equals to 20.')
+        return description
+
+#  dates later then now
+#     def clean_start_date_end_date(self, *args, **kwargs):
+#         start_date = self.cleaned_data.get('start_date')
+#         end_date = self.cleaned_data.get('end_date')
+#         now = dateformat.format(timezone.now(), 'Y-m-d')
+#         _start_date = dateformat.format(start_date, 'Y-m-d')
+#         _end_date = dateformat.format(end_date, 'Y-m-d')
+#         print(_start_date > _end_date)
+#         if _start_date > _end_date:
+#             raise forms.ValidationError('Start date cannot be later than end date')
+#         if _start_date < now:
+#             raise forms.ValidationError('Start date should be upcoming date')
+#         return start_date, end_date
 
 
 class UserProfileInfoForm(forms.ModelForm):
@@ -80,6 +88,7 @@ class UserForm(forms.ModelForm):
         model = User
         fields = ['username', 'email', 'password']
 
+# password length from 8-30
     def clean_password(self, *args, **kwargs):
         password = self.cleaned_data.get('password')
         if 8 <= len(password) <= 30:
@@ -87,6 +96,7 @@ class UserForm(forms.ModelForm):
         else:
             raise forms.ValidationError('The password should contain from 8-30 characters')
 
+# unique email
     def clean_email(self, *args, **kwargs):
         email = self.cleaned_data.get('email')
         qs = User.objects.filter(email=email)
@@ -94,6 +104,7 @@ class UserForm(forms.ModelForm):
             raise forms.ValidationError('The user with this email already registered')
         return email
 
+# unique username
     def clean_username(self, *args, **kwargs):
         username = self.cleaned_data.get('username')
         if len(username) > 50 or len(username) == 0:
