@@ -6,54 +6,61 @@
 
 <div class="row">
     <div class="col-12 col-md-12 mb-3 mx-1">
-        <h4 class="font-italic">Detail: {{ event.title }}</h4>
+
         <div class="d-flex justify-content-between">
-            <div>
+            <div class="full-ml">
+                <p class="font-italic h3">{{ event.title }}<small class="text-muted">, {{event.event_type}}</small></p>
                 {% if event.cover %}
                 <div class="">
-                    <a href=""><img src="{{ event.cover.url }}" alt="..." width="auto" height="500px" class="cover-full"/></a>
+                    <a href=""><img src="{{ event.cover.url }}" alt="..." width="auto" height="500px"
+                                    class="cover-full"/></a>
                 </div>
                 {% endif %}
-                {% if user.is_authenticated %}
-                <div class="col-12">
-                    <div class="d-flex">
-                        {% if request.user == event.author %}
-                        <div class="d-flex ">
-                            <input type="submit" class="btn btn-warning btn-sm"
-                                   onclick="location.href='{% url 'update_event_post' event.id %}'" value="Update"/>
-                            <input type="submit" class="btn btn-danger btn-sm"
-                                   onclick="location.href='{% url 'delete_event_post' event.id %}'" value="Delete"/>
-                        </div>
-                        {% endif %}
-                        <div class="d-flex justify-content-start">
-                            <form action="{% url 'join_event' %}" method="post">{% csrf_token %}
-                                {% if is_joined %}
-                                <button type="submit" class="btn btn-success" value="{{ event.pk }}" name="event_pk">
-                                    UnJoin
-                                </button>
-                                {% else %}
-                                <button type="submit" class="btn btn-info" value="{{ event.pk }}" name="event_pk">Join
-                                </button>
-                                {% endif %}
-                                <span><a href="{% url 'members_list' event.pk %}">{{ event.join.all.count }}</a>/{{ event.members_number}}</span>
-                            </form>
-                        </div>
+
+
+                <div class="d-flex justify-content-between">
+                    {% if user.is_authenticated %}
+                    {% if request.user == event.author %}
+                    <div class="d-flex ">
+                        <input type="submit" class="btn btn-warning btn-sm"
+                               onclick="location.href='{% url 'update_event_post' event.id %}'" value="Update"/>
+                        <input type="submit" class="btn btn-danger btn-sm"
+                               onclick="location.href='{% url 'delete_event_post' event.id %}'" value="Delete"/>
+                    </div>
+                    {% endif %}
+                    <div class="d-flex justify-content-start">
+                        <form action="{% url 'join_event' %}" method="post">{% csrf_token %}
+                            {% if is_joined %}
+                            <button type="submit" class="btn btn-success" value="{{ event.pk }}"
+                                    name="event_pk">
+                                UnJoin
+                            </button>
+                            {% else %}
+                            <button type="submit" class="btn btn-info" value="{{ event.pk }}" name="event_pk">
+                                Join
+                            </button>
+                            {% endif %}
+                            <span><a href="{% url 'members_list' event.pk %}">{{ event.join.all.count }}</a>/{{ event.members_number}}</span>
+                        </form>
+                    </div>
+                    {% endif %}
+                    <div class="">
+                        <p class="font-italic">Hosted by: {{ event.host }}</p>
                     </div>
                 </div>
-                {% endif %}
+
+
                 <hr>
-                <div class="text-justify">
-                    <p class="w-50"><span class="font-weight-bold">Description:</span> {{ event.description }}</p>
-                    <p><span class="font-weight-bold">Type:</span> {{event.event_type}}</p>
+                <div class="text-justify content-ml">
+                    <p class=""><span class="font-weight-bold">Description:</span> {{ event.description }}</p>
                     <p><span class="font-weight-bold">Location:</span> {{event.location}}</p>
-                    <p><span class="font-weight-bold">When:</span> from {{ event.start_date}} to {{ event.end_date}}</p>
-                    <p><span class="font-weight-bold">Time:</span> from {{event.start_time}} to {{event.end_time}}</p>
+                    <p><span class="font-weight-bold">When:</span> {{ event.start_date}} - {{ event.end_date}}</p>
+                    <p><span class="font-weight-bold">Time:</span> {{event.start_time}} - {{event.end_time}}</p>
                     <p><span class="font-weight-bold">Category:</span> {{event.category}}</p>
-                    <p><span class="font-weight-bold">Host:</span> {{event.host}}</p>
                 </div>
             </div>
-            <div>
-                {% easy_map "Russia, Ekaterinburg, Mira 32" 500 500 %}
+            <div class="maps-mr">
+                {% easy_map "Russia, Ekaterinburg, Mira 32" 400 300 %}
                 <p>Google Maps</p>
             </div>
         </div>

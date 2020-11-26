@@ -1,7 +1,7 @@
 <!--<li><a href="{% url 'event_detail' event_post.pk %}">{{ event_post.title }}</a></li>-->
 
-<div class="col-12 col-md-4 mb-3 mx-auto">
-    <div class="card bg-light">
+<div class="col-12 col-md-4">
+    <div class="card bg-light h-100">
         {% if event_post.cover %}
         <div class="text-center">
             <a href="{% url 'event_detail' event_post.pk %}"><img src="{{ event_post.cover.url }}"
@@ -9,7 +9,7 @@
                                                                   alt="..."/></a>
         </div>
         {% endif %}
-        <div class="card-body">
+        <div class="card-body ml-3">
             {% if not detail %}
             <h5 class="card-title"><a href="{% url 'event_detail' event_post.pk %}">{{ event_post.title }}</a></h5>
             {% endif %}
