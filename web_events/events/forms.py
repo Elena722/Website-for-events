@@ -123,3 +123,5 @@ class CommentsForm(forms.ModelForm):
     widgets = {
         'text': forms.TextInput(attrs={'class': 'editable medium-editor-textarea'})
     }
+
+

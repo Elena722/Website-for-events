@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'events',  # add app
     'searches',
+    'easy_maps',
 ]
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -153,3 +154,8 @@ TEMPLATE_CONTEXT_PROCESSORS = (
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 
 LOGIN_REDIRECT_URL = '/'
+
+EASY_MAPS_GOOGLE_KEY = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ___0123456789'
+# EASY_MAPS_CENTER = (-41.3, 32)
+EASY_MAPS_ZOOM = 16
+EASY_MAPS_LANGUAGE = "en"

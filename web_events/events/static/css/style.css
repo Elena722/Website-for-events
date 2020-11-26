@@ -1,0 +1,13 @@
+.cover {
+
+    width: 400px;
+    height: 400px;
+    object-fit: cover;
+}
+
+.cover-full {
+
+    width: 500px;
+    height: 500px;
+    object-fit: cover;
+}
