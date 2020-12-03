@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     'debug_toolbar',  # add debug
     'events',  # add app
     'searches',
+    'templated_email',
 ]
 
 MIDDLEWARE = [
@@ -165,3 +166,8 @@ EMAIL_HOST_PASSWORD = '1vernost1'
 LOGIN_REDIRECT_URL = '/'
 
 INTERNAL_IPS = ['127.0.0.1']  # debug
+
+TEMPLATED_EMAIL_TEMPLATE_DIR = 'templated_email/'  # use '' for top level template dir, ensure there is a trailing slash
+TEMPLATED_EMAIL_FILE_EXTENSION = 'email'
+
+TEMPLATED_EMAIL_BACKEND = 'templated_email.backends.vanilla_django.TemplateBackend'

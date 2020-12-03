@@ -25,6 +25,7 @@ urlpatterns = [
     path('accounts/', include('django.contrib.auth.urls')),
     path('search/', search_view),
     path('search_my/', my_search_view),
+    path('', include('templated_email.urls', namespace='templated_email')),
 ]
 
 urlpatterns += static(settings.STATIC_URL, documnet_root=settings.STATIC_ROOT)

@@ -21,6 +21,9 @@ from pathlib import Path
 from email.mime.image import MIMEImage
 import os
 from email.mime.multipart import MIMEMultipart
+from templated_email import InlineImage
+from django.urls import path
+from templated_email import send_templated_mail
 
 
 
@@ -277,27 +280,22 @@ def form_send_email(request, pk):
             message = request.POST.get('message', '')
             if subject and message:
                 for o in obj:
-                    print(o.email, o.user, o.first_name, o.last_name)
+                    # print(o.email, o.user, o.first_name, o.last_name)
                     try:
-                        if o.first_name:
-                            c = {'title': subject, 'content': message, 'event': event, 'username': o.first_name,
-                                 'sendler': request.user.username,
-                                 'pk': pk}
-                        else:
-                            c = {'title': subject, 'content': message, 'event': event, 'username': o.user,
-                                 'sendler': request.user.username, 'pk': pk}
-                        html_content = render_to_string('templated_email/email.html', c)
-                        text_content = strip_tags(html_content)
                         img_data = event.cover.read()
-                        img = MIMEImage(img_data, _subtype="jpeg")
-                        img.add_header('Content-ID', '<coupon_image>')
-                        img.add_header('Content-Disposition', 'inline', filename="coupon_image")
-                        email = EmailMultiAlternatives(subject, text_content, settings.EMAIL_HOST_USER, [o.email], )
-                        email.attach_alternative(html_content, "text/html")
-                        email.mixed_subtype = 'related'
-                        email.attach(img)
-
-                        email.send()
+                        img_name = Path(event.cover.url).name
+                        inline_image = InlineImage(filename=img_name, content=img_data, subtype='jpeg')
+                        if o.first_name:
+                            c = {'event_image': inline_image, 'content': message, 'event': event, 'username': o.first_name,
+                                 'sendler': request.user.username,
+                                 'pk': pk, 'subject': subject}
+                        else:
+                            c = {'event_image': inline_image, 'content': message, 'event': event, 'username': o.user,
+                                 'sendler': request.user.username, 'pk': pk, 'subject': subject}
+                        send_templated_mail(template_name='welcome',
+                                            from_email=settings.EMAIL_HOST_USER,
+                                            recipient_list=[o.email],
+                                            context=c)
                     except BadHeaderError:
                         return HttpResponse('Invalid header found.')
             success_url = reverse_lazy('event_detail', kwargs={'pk': event.id})

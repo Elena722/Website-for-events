@@ -1,0 +1,49 @@
+{% extends 'templated_email/base_email.html' %}
+
+{% block subject %}{{subject}}{% endblock %}
+{% block html %}
+
+<p class="italic">Dear {{username}},</p>
+
+<p>{{ content }}</p>
+<img src="{{ event_image }}" class="image" >
+<p class="text-center">Event link - <a href="http://127.0.0.1:8000/detail/{{pk}}">"{{ event.title }}"</a></p>
+<br>
+<br>
+<br>
+<hr>
+<p class="italic">Sincerely,</p>
+<p class="italic">{{ sendler }}</p>
+
+<style>
+.image{
+    height:400px;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    width: 50%;
+}
+.text-center{
+    text-align: center;
+}
+.italic{
+    font-style: italic;
+}
+p{
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 14px;
+}
+
+</style>
+{% endblock %}
+
+
+<!-- With the 'if' the link will only appear on the email. -->
+{% if email_uuid %}
+  <!-- Note: you will need to add your site since you will need to access
+             it from the email -->
+  You can view this e-mail on the web here:
+  <a href="http://www.yoursite.com{% url 'templated_email:show_email' uuid=email_uuid %}">
+    here
+  </a>
+{% endif %}
