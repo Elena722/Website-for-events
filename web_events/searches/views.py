@@ -40,9 +40,9 @@ def search_view(request):
         end_event = now
         time_range = [delta_negative_year, delta_year]
     if _category == 'Party':
-        category = [1, None]
-    elif _category == 'Film':
         category = [2, None]
+    elif _category == 'Film':
+        category = [1, None]
     elif _category == 'All':
         category = [1, 2]
     author = None
@@ -92,9 +92,9 @@ def my_search_view(request):
         end_event = now
         time_range = [delta_negative_year, delta_year]
     if _category == 'Party':
-        category = [1, None]
-    elif _category == 'Film':
         category = [2, None]
+    elif _category == 'Film':
+        category = [1, None]
     elif _category == 'All':
         category = [1, 2]
     if _role == 'Organizer':
@@ -105,13 +105,13 @@ def my_search_view(request):
     elif _role == 'All':
         events = Events.objects.filter(author=request.user)
         events2 = JoinModelButton.objects.filter(user=request.user, value='Join')
-    print(type(events))
     author = request.user
     context = {'query': query, 'category': _category, 'start_date': _start_date, 'role':_role}
     SearchQuery.objects.create(author=author, query=query)
     for event in events2:
         obj = Events.objects.filter(title=event)
         events = events | obj
+    # print(events)
     events = events.my_search(query=query, category=category, start_event=start_event, end_event=end_event, time_range=time_range)
     user_profile = UserProfileInfoModel.objects.get(user=request.user)
     context['events'] = events

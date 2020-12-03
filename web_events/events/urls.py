@@ -5,7 +5,7 @@ from django.conf.urls.static import static
 from django.contrib.staticfiles.urls import staticfiles_urlpatterns
 from .views import create_event, event_post_update_view, event_post_delete_view
 from .views import my_event_list, home_page_view, join_event, detail_event, members_list, register, add_comment
-from .views import event_delete_comment, event_approve_comment, event_comment_update
+from .views import event_delete_comment, event_approve_comment, event_comment_update, form_send_email
 
 # from .views import filter_category_page
 
@@ -26,6 +26,8 @@ urlpatterns = [
     path('detail/<int:pk>/delete_comment', event_delete_comment, name='comment_remove'),
     path('detail/<int:pk>/approve_comment', event_approve_comment, name='comment_approve'),
     path('detail/<int:pk>/edit_comment', event_comment_update, name='comment_update'),
+
+    path('members/<int:pk>/send_email/', form_send_email, name='send_email'),
 
     # path('filter_category/<str:category>/', filter_category_page, name='filter_category_page'),
     # path('filter/all/', views.EventListView.as_view(), name='list_view'),

@@ -75,7 +75,7 @@ class Category(models.Model):
         return f'{self.name}'
 
 
-class Events(models.Model):  # events_set -> queryset
+class Events(models.Model):
     title = models.CharField(max_length=50, null=True)
     offline_online = (('offline event', 'offline event'), ('online event', 'online event'))
     event_type = models.CharField(
@@ -83,12 +83,14 @@ class Events(models.Model):  # events_set -> queryset
         choices=offline_online,
         default='offline'
     )
-    start_date = models.DateField(null=True)
-    end_date = models.DateField(null=True)
-    start_time = models.TimeField(null=True)
-    end_time = models.TimeField(null=True)
+    start_date = models.DateField(null=True, help_text='YYYY-mm-dd')
+    end_date = models.DateField(null=True, help_text='YYYY-mm-dd')
+    start_time = models.TimeField(null=True, help_text='HH:MM')
+    end_time = models.TimeField(null=True, help_text='HH:MM')
     description = models.TextField(null=True)
     location = models.CharField(max_length=200, null=True)
+    coordinates_latitude = models.DecimalField(max_digits=9, decimal_places=6, null=True, blank=True)
+    coordinates_longitude = models.DecimalField(max_digits=9, decimal_places=6, null=True, blank=True)
     members_number = models.PositiveIntegerField(default=0)
     host = models.CharField(max_length=30, null=True)
     cover = models.ImageField(upload_to='./images/covers/', blank=True, null=True, default='./images/covers/fon.jpeg')
@@ -112,8 +114,7 @@ class Events(models.Model):  # events_set -> queryset
         ordering = ['start_date', 'start_time', 'end_date', 'end_time']
 
 
-
-LIKE_CHOICES = (
+JOIN_CHOICES = (
     ('Join', 'Join'),
     ('UnJoin', 'UnJoin'),
 )
@@ -122,24 +123,26 @@ LIKE_CHOICES = (
 class JoinModelButton(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     event = models.ForeignKey(Events, on_delete=models.CASCADE)
-    value = models.CharField(choices=LIKE_CHOICES, default='Join', max_length=10)
+    value = models.CharField(choices=JOIN_CHOICES, default='Join', max_length=10)
 
     def __str__(self):
-        return str(self.event)
-
+        return f'{str(self.event)}'
 
 class UserProfileInfoModel(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
-    password = models.CharField(max_length=30, default='qwqwqw12')
-    profile_pic = models.ImageField(upload_to='./images/profile_pics', blank=True)
+    first_name = models.CharField(max_length=15, default='', blank=True, null=True)
+    last_name = models.CharField(max_length=30, default='', blank=True, null=True)
+    password = models.CharField(max_length=30)
+    email = models.EmailField(default='eee@gmail.com')
+    profile_pic = models.ImageField(upload_to='./images/profile_pics', blank=True, null=True)
 
     def __str__(self):
-        return self.user.username
+        return f'{self.user.username}'
 
 
 class Comments(models.Model):
     event = models.ForeignKey(Events, related_name='comments', on_delete=models.CASCADE)
-    author = models.ForeignKey(Author, on_delete=models.DO_NOTHING)
+    author = models.ForeignKey(Author, on_delete=models.CASCADE)
     text = models.TextField(max_length=500)
     created_date = models.DateTimeField(default=timezone.now)
     approved_comment = models.BooleanField(default=False)
@@ -149,7 +152,7 @@ class Comments(models.Model):
         self.save()
 
     def __str__(self):
-        return self.text
+        return f'{self.text}'
 
     class Meta:
         ordering = ['-created_date']

@@ -40,10 +40,11 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'debug_toolbar',  # add debug
     'events',  # add app
     'searches',
-    'easy_maps',
 ]
+
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
@@ -52,6 +53,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'debug_toolbar.middleware.DebugToolbarMiddleware',
 ]
 
 ROOT_URLCONF = 'web_events.urls'
@@ -151,11 +153,15 @@ TEMPLATE_CONTEXT_PROCESSORS = (
     'django.template.context_processors.media',
 )
 
-EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+# Email settings
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'  # console
+EMAIL_USE_TLS = True
+EMAIL_USE_SSL = False
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = 587
+EMAIL_HOST_USER = 'elena.makovenko@gmail.com'
+EMAIL_HOST_PASSWORD = '1vernost1'
 
 LOGIN_REDIRECT_URL = '/'
 
-EASY_MAPS_GOOGLE_KEY = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ___0123456789'
-# EASY_MAPS_CENTER = (-41.3, 32)
-EASY_MAPS_ZOOM = 16
-EASY_MAPS_LANGUAGE = "en"
+INTERNAL_IPS = ['127.0.0.1']  # debug

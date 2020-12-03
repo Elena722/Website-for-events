@@ -18,7 +18,7 @@ class CreateEventForm(forms.Form):
                                widget=forms.SelectDateWidget(years=YEARS))
     start_time = forms.TimeField(label='Start time', initial='08:00')
     end_time = forms.TimeField(label='End time', initial='08:00')
-    description = forms.CharField(label='Description', min_length=4)
+    description = forms.CharField(label='Description', min_length=20)
     location = forms.CharField(label='Location', max_length=200)
     host = forms.CharField(label='Host', max_length=30)
     cover = forms.FileField(label='Cover')
@@ -37,7 +37,7 @@ class EventPostModelForm(forms.ModelForm):
     class Meta:
         model = Events
         fields = ['title', 'event_type', 'start_date', 'end_date', 'start_time', 'end_time', 'description',
-                  'location', 'host', 'category', 'cover', 'members_number']
+                  'location', 'coordinates_latitude', 'coordinates_longitude', 'host', 'category', 'cover', 'members_number']
 
 # unique title, easier to filter join
     def clean_title(self, *args, **kwargs):
@@ -86,7 +86,7 @@ class UserForm(forms.ModelForm):
 
     class Meta:
         model = User
-        fields = ['username', 'email', 'password']
+        fields = ['username', 'first_name', 'last_name', 'email', 'password']
 
 # password length from 8-30
     def clean_password(self, *args, **kwargs):
@@ -125,3 +125,6 @@ class CommentsForm(forms.ModelForm):
     }
 
 
+class SendEmailForm(forms.Form):
+    subject = forms.CharField(max_length=100, required=True, help_text='100 characters max.')
+    message = forms.CharField(widget=forms.Textarea, required=True)

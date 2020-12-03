@@ -45,3 +45,14 @@
 .nav-mar-t{
     margin-top: 10px;
 }
+
+.sq{
+    width: 500px;
+    height: 500px;
+    border: 3px solid red;
+    background-color: yellow;
+}
+
+.maps-mr{
+    margin-right: 150px;
+}

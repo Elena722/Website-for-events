@@ -1,11 +1,11 @@
 <!--<li><a href="{% url 'event_detail' event_post.pk %}">{{ event_post.title }}</a></li>-->
 
-<div class="col-12 col-md-4">
+<div class="col-12 col-md-4 col-sm-6">
     <div class="card bg-light h-100">
         {% if event_post.cover %}
         <div class="text-center">
             <a href="{% url 'event_detail' event_post.pk %}"><img src="{{ event_post.cover.url }}"
-                                                                  class="card-img-top cover"
+                                                                  class="card-img-top cover img-fluid"
                                                                   alt="..."/></a>
         </div>
         {% endif %}

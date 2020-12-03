@@ -1,5 +1,6 @@
 {% extends 'base.html' %}
-{% load easy_maps_tags %}
+
+
 <!---->
 {% block content %}
 
@@ -7,8 +8,8 @@
 <div class="row">
     <div class="col-12 col-md-12 mb-3 mx-1">
 
-        <div class="d-flex justify-content-between">
-            <div class="full-ml">
+        <div class="d-flex justify-content-between container">
+            <div class="">
                 <p class="font-italic h3">{{ event.title }}<small class="text-muted">, {{event.event_type}}</small></p>
                 {% if event.cover %}
                 <div class="">
@@ -59,14 +60,12 @@
                     <p><span class="font-weight-bold">Category:</span> {{event.category}}</p>
                 </div>
             </div>
-            <div class="maps-mr">
-                {% easy_map "Russia, Ekaterinburg, Mira 32" 400 300 %}
-                <p>Google Maps</p>
+            <div class="">
+                <p class="text-center">Maps</p>
+                <div id="mapid" style="width: 400px; height: 400px;"></div>
             </div>
         </div>
         <hr>
-
-
         <div class="">
             <div class="text-center">
                 {% if request.user.is_authenticated %}
@@ -88,7 +87,7 @@
                            href="{% url 'comment_update' pk=comment.pk %}">U</a>
                     </div>
                     <p class="font-italic text-right text-secondary">{{ comment.created_date }}</p>
-                    <p>{{ comment.text|safe|linebreaks }}</p>
+                    <p class="">{{ comment.text|safe|linebreaks }}</p>
                     <p class="font-italic text-right text-secondary">Author: {{ comment.author }}</p>
                 </div>
                 {% else %}
@@ -120,6 +119,27 @@
             </div>
         </div>
 
+        <script>
+            {% if event.coordinates_latitude and event.coordinates_longitude %}
+            var mymap = L.map('mapid').setView([ {{ event.coordinates_latitude }}, {{ event.coordinates_longitude }}], 13);
+            {% else %}
+            var mymap = L.map('mapid').setView([ 59.437000, 24.753600], 13);
+            {% endif %}
+            L.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token=pk.eyJ1IjoibWFwYm94IiwiYSI6ImNpejY4NXVycTA2emYycXBndHRqcmZ3N3gifQ.rJcFIG214AriISLbB6B5aw', {
+		maxZoom: 18,
+		attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, ' +
+			'<a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, ' +
+			'Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
+		id: 'mapbox/streets-v11',
+		tileSize: 512,
+		zoomOffset: -1
+	}).addTo(mymap);
+    {% if not event.coordinates_latitude and event.coordinates_longitude %}
+    {% else %}
+	L.marker([{{ event.coordinates_latitude }}, {{ event.coordinates_longitude }}]).addTo(mymap)
+		.bindPopup("<b>{{event.location}}</b><br/>").openPopup();
+    {% endif %}
+        </script>
         {% endblock %}
 
 

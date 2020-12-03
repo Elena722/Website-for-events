@@ -1,12 +1,13 @@
 {% extends 'base.html' %}
 
 {% block content %}
-<h1>{{ title }}</h1>
+<div class="container">
+<h4 class="font-italic">{{ title }} to "{{ event }}"</h4>
 <form class="" method="post">{% csrf_token %}
     {{ form.as_p }}
-    <input type="submit" class="btn btn-warning" value="{{ name_button }}" />
+    <input type="submit" class="btn btn-info" value="{{ name_button }}" />
 </form>
-
+</div>
 
 <script>var editor = new MediumEditor('.editable');</script>
 
