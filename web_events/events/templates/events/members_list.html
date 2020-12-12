@@ -11,7 +11,9 @@
                     <li>{{ member.user }}</li>
                     {% endfor %}
                 </ol>
+                {% if request.user == event.author %}
                 <a class="btn btn-primary" href="{% url 'send_email' event.id %}">Send email to members</a>
+                {% endif %}
             </div>
             <div>
                 <img src="{{ event.cover.url }}" alt="..." width="auto" height="500px"

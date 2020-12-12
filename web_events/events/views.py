@@ -1,30 +1,20 @@
-from django.shortcuts import render, get_object_or_404, redirect, HttpResponseRedirect, get_list_or_404, HttpResponse
-from django.views.generic import TemplateView, ListView, CreateView, FormView, DetailView
-from .models import Events, Category, JoinModelButton, UserProfileInfoModel, Comments
+from django.shortcuts import render, get_object_or_404, redirect, HttpResponseRedirect, HttpResponse
+from .models import Events, JoinModelButton, UserProfileInfoModel, Comments
 from django.urls import reverse_lazy, reverse
 from django import forms
 from .forms import CreateEventForm, EventPostModelForm, UserProfileInfoForm, UserForm, CommentsForm, SendEmailForm
-from django.http import Http404
 from django.contrib.auth.decorators import login_required
-from django.contrib.admin.views.decorators import staff_member_required
-from django.utils import timezone
 from itertools import chain
 from django.contrib.auth.models import User
 from django.contrib.auth import login, authenticate
 from django.utils import timezone, dateformat
-from django.core.mail import BadHeaderError, send_mail, EmailMultiAlternatives
+from django.core.mail import BadHeaderError, send_mail
 from django.conf import settings
-from django.template.loader import render_to_string
-from django.utils.html import strip_tags
 from django.urls import resolve
 from pathlib import Path
-from email.mime.image import MIMEImage
-import os
-from email.mime.multipart import MIMEMultipart
 from templated_email import InlineImage
 from django.urls import path
 from templated_email import send_templated_mail
-
 
 
 
@@ -286,7 +276,8 @@ def form_send_email(request, pk):
                         img_name = Path(event.cover.url).name
                         inline_image = InlineImage(filename=img_name, content=img_data, subtype='jpeg')
                         if o.first_name:
-                            c = {'event_image': inline_image, 'content': message, 'event': event, 'username': o.first_name,
+                            c = {'event_image': inline_image, 'content': message, 'event': event,
+                                 'username': o.first_name,
                                  'sendler': request.user.username,
                                  'pk': pk, 'subject': subject}
                         else:
@@ -309,3 +300,8 @@ def form_send_email(request, pk):
     context = {'form': form, 'title': 'Send email to all members', 'name_button': 'Send emails',
                'user_profile': user_profile, 'event': event}
     return render(request, template_name, context)
+
+
+#
+
+

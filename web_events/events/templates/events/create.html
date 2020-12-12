@@ -42,9 +42,28 @@ function onMapClick(e) {
         .setLatLng(e.latlng)
         .setContent("You clicked the map at " + e.latlng.toString())
         .openOn(mymap);
+
+    document.getElementById("id_coordinates_latitude").value =  e.latlng.lat;
+    document.getElementById("id_coordinates_longitude").value =  e.latlng.lng;
 }
 
 mymap.on('click', onMapClick);
+
+var latitude_field = document.getElementById("id_coordinates_latitude");
+var longitude_field = document.getElementById("id_coordinates_longitude");
+
+function change_map(){
+    var latlng = L.latLng(latitude_field.value, longitude_field.value);
+    mymap.setView(latlng);
+}
+
+latitude_field.oninput = function() {
+    change_map()
+};
+longitude_field.oninput = function() {
+    change_map()
+};
+
 
 
 

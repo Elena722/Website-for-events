@@ -29,6 +29,7 @@ urlpatterns = [
 
     path('members/<int:pk>/send_email/', form_send_email, name='send_email'),
 
+
     # path('filter_category/<str:category>/', filter_category_page, name='filter_category_page'),
     # path('filter/all/', views.EventListView.as_view(), name='list_view'),
     # path('events/', views.EventList.as_view(), name='events'),

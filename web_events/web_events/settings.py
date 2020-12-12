@@ -44,6 +44,8 @@ INSTALLED_APPS = [
     'events',  # add app
     'searches',
     'templated_email',
+    'rest_framework',
+    'api',
 ]
 
 MIDDLEWARE = [
@@ -171,3 +173,12 @@ TEMPLATED_EMAIL_TEMPLATE_DIR = 'templated_email/'  # use '' for top level templa
 TEMPLATED_EMAIL_FILE_EXTENSION = 'email'
 
 TEMPLATED_EMAIL_BACKEND = 'templated_email.backends.vanilla_django.TemplateBackend'
+
+REST_FRAMEWORK = {
+    # Use Django's standard `django.contrib.auth` permissions,
+    # or allow read-only access for unauthenticated users.
+    'DEFAULT_PERMISSION_CLASSES': [
+        'rest_framework.permissions.DjangoModelPermissionsOrAnonReadOnly'
+    ]
+}
+

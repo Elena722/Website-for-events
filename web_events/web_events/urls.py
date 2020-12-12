@@ -26,6 +26,7 @@ urlpatterns = [
     path('search/', search_view),
     path('search_my/', my_search_view),
     path('', include('templated_email.urls', namespace='templated_email')),
+    path('api/', include('api.urls')),
 ]
 
 urlpatterns += static(settings.STATIC_URL, documnet_root=settings.STATIC_ROOT)

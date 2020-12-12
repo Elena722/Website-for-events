@@ -24,7 +24,6 @@
                 {{event_post.end_date}}</small></p>
             <p class="card-text"><small class="text-muted">Time: {{ event_post.start_time }} -
                 {{event_post.end_time}}</small></p>
-            <p class="card-text">{{ event_post.author }}</p>
             <p class="card-text"><small class="text-muted">Where: {{ event_post.location }}</small></p>
             <p class="card-text"><small class="text-muted">Category: {{ event_post.category }}</small></p>
             {% if user.is_authenticated %}
@@ -42,7 +41,7 @@
             <form action="{% url 'join_event' %}" method="post">{% csrf_token %}
                 <input type="hidden" name="event_pk" value="{{ event_post.pk }}">
                 {% if user in event_post.join.all %}
-                <button type="submit" class="btn btn-danger">UnJoin</button>
+                <button type="submit" class="btn btn-success">UnJoin</button>
                 {% endif %}
                 <span><a href="{% url 'members_list' event_post.pk %}">{{ event_post.join.all.count }}</a>/{{ event_post.members_number}}</span>
             </form>

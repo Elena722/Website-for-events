@@ -32,8 +32,8 @@ def search_view(request):
         end_event = now
         time_range = [now, delta_year]
     elif _start_date == 'Past':
-        start_event = now
-        end_event = now
+        start_event = past_now
+        end_event = past_now
         time_range = [delta_negative_year, past_now]
     elif _start_date == 'All':
         start_event = now
