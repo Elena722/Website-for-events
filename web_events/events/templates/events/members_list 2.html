@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+<!---->
+{% block content %}
+<div class="row">
+    <div class="container">
+        <div class="d-flex justify-content-between">
+            <div>
+                <p>{{event.title}} are going the following members:</p>
+                <ol>
+                    {% for member in members %}
+                    <li>{{ member.user }}</li>
+                    {% endfor %}
+                </ol>
+                <a class="btn btn-primary" href="{% url 'send_email' event.id %}">Send email to members</a>
+            </div>
+            <div>
+                <img src="{{ event.cover.url }}" alt="..." width="auto" height="500px"
+                     class="cover-full"/>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

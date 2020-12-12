@@ -1,0 +1,14 @@
+{% extends 'base.html' %}
+<!---->
+{% block content %}
+<h4>Delete event</h4>
+<form action="" method="post">
+    {% csrf_token %} <!--to protect our web form from Cross Site Scripting attack-->
+    <p>
+        Are you sure to delete {{ object.title }}?
+    </p>
+    <button class="btn btn-danger">Yes, delete</button>
+
+</form>
+
+{% endblock %}
